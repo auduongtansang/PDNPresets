@@ -30,7 +30,32 @@
 		{
 			this.buttonCancel = new System.Windows.Forms.Button();
 			this.buttonOK = new System.Windows.Forms.Button();
+			this.cbEffect = new System.Windows.Forms.ComboBox();
+			this.btnAdd = new System.Windows.Forms.Button();
 			this.SuspendLayout();
+			// 
+			// cbEffect
+			// 
+			this.cbEffect.FormattingEnabled = true;
+			this.cbEffect.Items.AddRange(new object[] {
+			"Auto-Level",
+			"Black and White",
+			"Brightness and Contrast"});
+			this.cbEffect.Location = new System.Drawing.Point(12, 12);
+			this.cbEffect.Name = "cbEffect";
+			this.cbEffect.Size = new System.Drawing.Size(140, 23);
+			this.cbEffect.SelectedIndex = 0;
+			this.cbEffect.TabIndex = 0;
+			// 
+			// btnAdd
+			// 
+			this.btnAdd.Location = new System.Drawing.Point(158, 12);
+			this.btnAdd.Name = "btnAdd";
+			this.btnAdd.Size = new System.Drawing.Size(83, 23);
+			this.btnAdd.TabIndex = 1;
+			this.btnAdd.Text = "Add";
+			this.btnAdd.UseVisualStyleBackColor = true;
+			this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
 			// 
 			// buttonOK
 			// 
@@ -40,7 +65,7 @@
 			this.buttonOK.Location = new System.Drawing.Point(151, 79);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(83, 23);
-			this.buttonOK.TabIndex = 4;
+			this.buttonOK.TabIndex = 2;
 			this.buttonOK.Text = "OK";
 			this.buttonOK.UseVisualStyleBackColor = true;
 			// 
@@ -52,7 +77,7 @@
 			this.buttonCancel.Location = new System.Drawing.Point(243, 79);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(83, 23);
-			this.buttonCancel.TabIndex = 5;
+			this.buttonCancel.TabIndex = 3;
 			this.buttonCancel.Text = "Cancel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			// 
@@ -62,6 +87,8 @@
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.CancelButton = this.buttonCancel;
 			this.ClientSize = new System.Drawing.Size(334, 112);
+			this.Controls.Add(this.btnAdd);
+			this.Controls.Add(this.cbEffect);
 			this.Controls.Add(this.buttonOK);
 			this.Controls.Add(this.buttonCancel);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -78,5 +105,7 @@
 
 		private System.Windows.Forms.Button buttonOK;
 		private System.Windows.Forms.Button buttonCancel;
+		private System.Windows.Forms.ComboBox cbEffect;
+		private System.Windows.Forms.Button btnAdd;
 	}
 }

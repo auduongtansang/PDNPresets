@@ -1,6 +1,7 @@
 ﻿using PaintDotNet;
 using PaintDotNet.Effects;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 
 namespace PDNPresets
 {
@@ -29,6 +30,34 @@ namespace PDNPresets
 		protected override void InitDialogFromToken(EffectConfigToken effectTokenCopy)
 		{
 			this.effects = new List<Pair<Effect, EffectConfigToken>>();
+			FinishTokenUpdate();
+		}
+
+		private void btnAdd_Click(object sender, System.EventArgs e)
+		{
+			Effect effect = null;
+			EffectConfigDialog dialog = null;
+
+			if (this.cbEffect.Text == "Auto-Level")
+			{
+				effect = new AutoLevelEffect();
+				dialog = effect.CreateConfigDialog();
+				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
+			}
+			else if (this.cbEffect.Text == "Black and White")
+			{
+				effect = new DesaturateEffect();
+				dialog = effect.CreateConfigDialog();
+				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
+			}
+			else if (this.cbEffect.Text == "Brightness and Contrast")
+			{
+				effect = new BrightnessAndContrastAdjustment();
+				dialog = effect.CreateConfigDialog();
+				dialog.ShowDialog();
+			}
+
+			this.effects.Add(new Pair<Effect, EffectConfigToken>(effect, dialog.EffectToken));
 			FinishTokenUpdate();
 		}
 	}
