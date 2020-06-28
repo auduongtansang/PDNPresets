@@ -74,6 +74,24 @@ namespace PDNPresets
 				dialog = effect.CreateConfigDialog();
 				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
 			}
+			else if (this.cbEffect.Text == "Levels")
+			{
+				effect = new LevelsEffect();
+				dialog = effect.CreateConfigDialog();
+				dialog.ShowDialog();
+			}
+			else if (this.cbEffect.Text == "Posterize")
+			{
+				effect = new PosterizeAdjustment();
+				dialog = effect.CreateConfigDialog();
+				dialog.ShowDialog();
+			}
+			else if (this.cbEffect.Text == "Sepia")
+			{
+				effect = new SepiaEffect();
+				dialog = effect.CreateConfigDialog();
+				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
+			}
 
 			this.effects.Add(new Pair<Effect, EffectConfigToken>(effect, dialog.EffectToken));
 			FinishTokenUpdate();

@@ -43,7 +43,10 @@
 			"Brightness / Contrast",
 			"Curves",
 			"Hue / Saturation",
-			"Invert Colors"});
+			"Invert Colors",
+			"Levels",
+			"Posterize",
+			"Sepia"});
 			this.cbEffect.Location = new System.Drawing.Point(12, 12);
 			this.cbEffect.Name = "cbEffect";
 			this.cbEffect.Size = new System.Drawing.Size(140, 23);
