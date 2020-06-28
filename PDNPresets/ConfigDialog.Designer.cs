@@ -40,7 +40,10 @@
 			this.cbEffect.Items.AddRange(new object[] {
 			"Auto-Level",
 			"Black and White",
-			"Brightness and Contrast"});
+			"Brightness / Contrast",
+			"Curves",
+			"Hue / Saturation",
+			"Invert Colors"});
 			this.cbEffect.Location = new System.Drawing.Point(12, 12);
 			this.cbEffect.Name = "cbEffect";
 			this.cbEffect.Size = new System.Drawing.Size(140, 23);

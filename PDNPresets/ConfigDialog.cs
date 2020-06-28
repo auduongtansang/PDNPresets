@@ -50,11 +50,29 @@ namespace PDNPresets
 				dialog = effect.CreateConfigDialog();
 				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
 			}
-			else if (this.cbEffect.Text == "Brightness and Contrast")
+			else if (this.cbEffect.Text == "Brightness / Contrast")
 			{
 				effect = new BrightnessAndContrastAdjustment();
 				dialog = effect.CreateConfigDialog();
 				dialog.ShowDialog();
+			}
+			else if (this.cbEffect.Text == "Curves")
+			{
+				effect = new CurvesEffect();
+				dialog = effect.CreateConfigDialog();
+				dialog.ShowDialog();
+			}
+			else if (this.cbEffect.Text == "Hue / Saturation")
+			{
+				effect = new HueAndSaturationAdjustment();
+				dialog = effect.CreateConfigDialog();
+				dialog.ShowDialog();
+			}
+			else if (this.cbEffect.Text == "Invert Colors")
+			{
+				effect = new InvertColorsEffect();
+				dialog = effect.CreateConfigDialog();
+				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
 			}
 
 			this.effects.Add(new Pair<Effect, EffectConfigToken>(effect, dialog.EffectToken));
