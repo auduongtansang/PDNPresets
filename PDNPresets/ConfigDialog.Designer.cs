@@ -32,6 +32,7 @@
 			this.buttonOK = new System.Windows.Forms.Button();
 			this.cbEffect = new System.Windows.Forms.ComboBox();
 			this.btnAdd = new System.Windows.Forms.Button();
+			this.lbEffect = new System.Windows.Forms.ListBox();
 			this.SuspendLayout();
 			// 
 			// cbEffect
@@ -63,15 +64,24 @@
 			this.btnAdd.UseVisualStyleBackColor = true;
 			this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
 			// 
+			// lbEffect
+			// 
+			this.lbEffect.FormattingEnabled = true;
+			this.lbEffect.ItemHeight = 15;
+			this.lbEffect.Location = new System.Drawing.Point(12, 41);
+			this.lbEffect.Name = "lbEffect";
+			this.lbEffect.Size = new System.Drawing.Size(228, 94);
+			this.lbEffect.TabIndex = 2;
+			// 
 			// buttonOK
 			// 
 			this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonOK.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.buttonOK.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.buttonOK.Location = new System.Drawing.Point(151, 79);
+			this.buttonOK.Location = new System.Drawing.Point(151, 278);
 			this.buttonOK.Name = "buttonOK";
 			this.buttonOK.Size = new System.Drawing.Size(83, 23);
-			this.buttonOK.TabIndex = 2;
+			this.buttonOK.TabIndex = 3;
 			this.buttonOK.Text = "OK";
 			this.buttonOK.UseVisualStyleBackColor = true;
 			// 
@@ -80,10 +90,10 @@
 			this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.buttonCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
-			this.buttonCancel.Location = new System.Drawing.Point(243, 79);
+			this.buttonCancel.Location = new System.Drawing.Point(243, 278);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(83, 23);
-			this.buttonCancel.TabIndex = 3;
+			this.buttonCancel.TabIndex = 4;
 			this.buttonCancel.Text = "Cancel";
 			this.buttonCancel.UseVisualStyleBackColor = true;
 			// 
@@ -92,7 +102,8 @@
 			this.AcceptButton = this.buttonOK;
 			this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
 			this.CancelButton = this.buttonCancel;
-			this.ClientSize = new System.Drawing.Size(334, 112);
+			this.ClientSize = new System.Drawing.Size(334, 311);
+			this.Controls.Add(this.lbEffect);
 			this.Controls.Add(this.btnAdd);
 			this.Controls.Add(this.cbEffect);
 			this.Controls.Add(this.buttonOK);
@@ -104,7 +115,6 @@
 			this.Text = "PDNPresets";
 			this.UseAppThemeColors = true;
 			this.ResumeLayout(false);
-
 		}
 
 		#endregion
@@ -113,5 +123,6 @@
 		private System.Windows.Forms.Button buttonCancel;
 		private System.Windows.Forms.ComboBox cbEffect;
 		private System.Windows.Forms.Button btnAdd;
+		private System.Windows.Forms.ListBox lbEffect;
 	}
 }

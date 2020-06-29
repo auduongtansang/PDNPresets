@@ -93,8 +93,12 @@ namespace PDNPresets
 				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
 			}
 
-			this.effects.Add(new Pair<Effect, EffectConfigToken>(effect, dialog.EffectToken));
-			FinishTokenUpdate();
+			if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+			{
+				this.lbEffect.Items.Add(this.cbEffect.Text);
+				this.effects.Add(new Pair<Effect, EffectConfigToken>(effect, dialog.EffectToken));
+				FinishTokenUpdate();
+			}
 		}
 	}
 }
