@@ -100,5 +100,17 @@ namespace PDNPresets
 				FinishTokenUpdate();
 			}
 		}
+
+		private void btnRemove_Click(object sender, System.EventArgs e)
+		{
+			int index = this.lbEffect.SelectedIndex;
+
+			if (index >= 0)
+			{
+				this.lbEffect.Items.RemoveAt(index);
+				this.effects.RemoveAt(index);
+				FinishTokenUpdate();
+			}
+		}
 	}
 }

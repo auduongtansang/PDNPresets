@@ -42,15 +42,15 @@
 			// 
 			this.cbEffect.FormattingEnabled = true;
 			this.cbEffect.Items.AddRange(new object[] {
-			"Auto-Level",
-			"Black and White",
-			"Brightness / Contrast",
-			"Curves",
-			"Hue / Saturation",
-			"Invert Colors",
-			"Levels",
-			"Posterize",
-			"Sepia"});
+            "Auto-Level",
+            "Black and White",
+            "Brightness / Contrast",
+            "Curves",
+            "Hue / Saturation",
+            "Invert Colors",
+            "Levels",
+            "Posterize",
+            "Sepia"});
 			this.cbEffect.Location = new System.Drawing.Point(12, 12);
 			this.cbEffect.Name = "cbEffect";
 			this.cbEffect.Size = new System.Drawing.Size(140, 23);
@@ -84,6 +84,7 @@
 			this.btnRemove.TabIndex = 3;
 			this.btnRemove.Text = "Remove";
 			this.btnRemove.UseVisualStyleBackColor = true;
+			this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
 			// 
 			// btnSave
 			// 
