@@ -6,16 +6,22 @@ namespace PDNPresets
 {
 	public class PDNPresetsConfigToken : EffectConfigToken
 	{
-		internal List<Pair<Effect, EffectConfigToken>> effects { get; set; }
+		internal List<string> names { get; set; }
+		internal List<Effect> effects { get; set; }
+		internal List<EffectConfigDialog> dialogs { get; set; }
 
 		internal PDNPresetsConfigToken()
 		{
-			this.effects = new List<Pair<Effect, EffectConfigToken>>();
+			this.names = new List<string>();
+			this.effects = new List<Effect>();
+			this.dialogs = new List<EffectConfigDialog>();
 		}
 
 		private PDNPresetsConfigToken(PDNPresetsConfigToken copyMe)
 		{
-			this.effects = new List<Pair<Effect, EffectConfigToken>>(copyMe.effects);
+			this.names = new List<string>(copyMe.names);
+			this.effects = new List<Effect>(copyMe.effects);
+			this.dialogs = new List<EffectConfigDialog>(copyMe.dialogs);
 		}
 
 		public override object Clone()

@@ -1,18 +1,23 @@
 ﻿using PaintDotNet;
 using PaintDotNet.Effects;
 using System.Collections.Generic;
-using System.Security.Cryptography;
+using System.Windows.Forms;
+using System;
 
 namespace PDNPresets
 {
 	internal partial class PDNPresetsConfigDialog : EffectConfigDialog
 	{
-		private List<Pair<Effect, EffectConfigToken>> effects;
+		private List<string> names;
+		private List<Effect> effects;
+		private List<EffectConfigDialog> dialogs;
 
 		public PDNPresetsConfigDialog()
 		{
 			InitializeComponent();
-			this.effects = new List<Pair<Effect, EffectConfigToken>>();
+			this.names = new List<string>();
+			this.effects = new List<Effect>();
+			this.dialogs = new List<EffectConfigDialog>();
 			FinishTokenUpdate();
 		}
 
@@ -24,91 +29,100 @@ namespace PDNPresets
 		protected override void InitTokenFromDialog()
 		{
 			PDNPresetsConfigToken token = (PDNPresetsConfigToken)EffectToken;
-			token.effects = new List<PaintDotNet.Pair<Effect, EffectConfigToken>>(this.effects);
+			token.names = new List<string>(this.names);
+			token.effects = new List<Effect>(this.effects);
+			token.dialogs = new List<EffectConfigDialog>(this.dialogs);
 		}
 
 		protected override void InitDialogFromToken(EffectConfigToken effectTokenCopy)
 		{
-			this.effects = new List<Pair<Effect, EffectConfigToken>>();
+			this.names = new List<string>();
+			this.effects = new List<Effect>();
+			this.dialogs = new List<EffectConfigDialog>();
 			FinishTokenUpdate();
 		}
 
-		private void btnAdd_Click(object sender, System.EventArgs e)
+		private void btnAdd_Click(object sender, EventArgs e)
 		{
+			string name = this.cbEffect.Text;
 			Effect effect = null;
 			EffectConfigDialog dialog = null;
 
-			if (this.cbEffect.Text == "Auto-Level")
+			if (name == "Auto-Level")
 			{
 				effect = new AutoLevelEffect();
 				dialog = effect.CreateConfigDialog();
-				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
+				dialog.DialogResult = DialogResult.OK;
 			}
-			else if (this.cbEffect.Text == "Black and White")
+			else if (name == "Black and White")
 			{
 				effect = new DesaturateEffect();
 				dialog = effect.CreateConfigDialog();
-				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
+				dialog.DialogResult = DialogResult.OK;
 			}
-			else if (this.cbEffect.Text == "Brightness / Contrast")
+			else if (name == "Brightness / Contrast")
 			{
 				effect = new BrightnessAndContrastAdjustment();
 				dialog = effect.CreateConfigDialog();
 				dialog.ShowDialog();
 			}
-			else if (this.cbEffect.Text == "Curves")
+			else if (name == "Curves")
 			{
 				effect = new CurvesEffect();
 				dialog = effect.CreateConfigDialog();
 				dialog.ShowDialog();
 			}
-			else if (this.cbEffect.Text == "Hue / Saturation")
+			else if (name == "Hue / Saturation")
 			{
 				effect = new HueAndSaturationAdjustment();
 				dialog = effect.CreateConfigDialog();
 				dialog.ShowDialog();
 			}
-			else if (this.cbEffect.Text == "Invert Colors")
+			else if (name == "Invert Colors")
 			{
 				effect = new InvertColorsEffect();
 				dialog = effect.CreateConfigDialog();
-				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
+				dialog.DialogResult = DialogResult.OK;
 			}
-			else if (this.cbEffect.Text == "Levels")
+			else if (name == "Levels")
 			{
 				effect = new LevelsEffect();
 				dialog = effect.CreateConfigDialog();
 				dialog.ShowDialog();
 			}
-			else if (this.cbEffect.Text == "Posterize")
+			else if (name == "Posterize")
 			{
 				effect = new PosterizeAdjustment();
 				dialog = effect.CreateConfigDialog();
 				dialog.ShowDialog();
 			}
-			else if (this.cbEffect.Text == "Sepia")
+			else if (name == "Sepia")
 			{
 				effect = new SepiaEffect();
 				dialog = effect.CreateConfigDialog();
-				dialog.DialogResult = System.Windows.Forms.DialogResult.OK;
+				dialog.DialogResult = DialogResult.OK;
 			}
 
-			if (dialog.DialogResult == System.Windows.Forms.DialogResult.OK)
+			if (dialog.DialogResult == DialogResult.OK)
 			{
 				this.lbEffect.Items.Add(this.cbEffect.Text);
-				this.effects.Add(new Pair<Effect, EffectConfigToken>(effect, dialog.EffectToken));
+				this.names.Add(name);
+				this.effects.Add(effect);
+				this.dialogs.Add(dialog);
 				FinishTokenUpdate();
 			}
 		}
 
-		private void btnRemove_Click(object sender, System.EventArgs e)
+		private void btnRemove_Click(object sender, EventArgs e)
 		{
 			int index = this.lbEffect.SelectedIndex;
 
 			if (index >= 0)
 			{
 				this.lbEffect.Items.RemoveAt(index);
+				this.names.RemoveAt(index);
 				this.effects.RemoveAt(index);
+				this.dialogs.RemoveAt(index);
 				FinishTokenUpdate();
 			}
 		}

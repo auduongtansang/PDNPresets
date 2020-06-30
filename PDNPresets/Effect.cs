@@ -1,16 +1,16 @@
 ﻿using PaintDotNet;
 using PaintDotNet.Effects;
-using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 
 namespace PDNPresets
 {
 	[PluginSupportInfo(typeof(PluginSupportInfo))]
 	public class PDNPresetsPlugin : Effect
 	{
-		private List<Pair<Effect, EffectConfigToken>> effects;
+		private List<string> names;
+		private List<Effect> effects;
+		private List<EffectConfigDialog> dialogs;
 
 		public PDNPresetsPlugin()
 			: base("PDNPresets", null, null, new EffectOptions { Flags = EffectFlags.Configurable })
@@ -25,7 +25,9 @@ namespace PDNPresets
 		protected override void OnSetRenderInfo(EffectConfigToken parameters, RenderArgs dstArgs, RenderArgs srcArgs)
 		{
 			PDNPresetsConfigToken token = (PDNPresetsConfigToken)parameters;
-			this.effects = new List<Pair<Effect, EffectConfigToken>>(token.effects);
+			this.names = token.names;
+			this.effects = token.effects;
+			this.dialogs = token.dialogs;
 
 			base.OnSetRenderInfo(parameters, dstArgs, srcArgs);
 		}
@@ -50,11 +52,14 @@ namespace PDNPresets
 				}
 			}
 
-			int count = this.effects.Count;
+			int count = this.names.Count;
 			for (int i = 0; i < count; i++)
 			{
-				Pair<Effect, EffectConfigToken> e = this.effects[i];
-				e.First.Render(e.Second, new RenderArgs(dst), new RenderArgs(dst), new Rectangle[1] { rect }, 0, 1);
+				string name = this.names[i];
+				Effect effect = this.effects[i];
+				EffectConfigDialog dialog = this.dialogs[i];
+
+				effect.Render(dialog.EffectToken, new RenderArgs(dst), new RenderArgs(dst), new Rectangle[1] { rect }, 0, 1);
 			}
 		}
 	}
