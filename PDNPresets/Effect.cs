@@ -1,5 +1,6 @@
 ﻿using PaintDotNet;
 using PaintDotNet.Effects;
+using PaintDotNet.PropertySystem;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -11,6 +12,7 @@ namespace PDNPresets
 		private List<string> names;
 		private List<Effect> effects;
 		private List<EffectConfigDialog> dialogs;
+		private List<PropertyCollection> collections;
 
 		public PDNPresetsPlugin()
 			: base("PDNPresets", null, null, new EffectOptions { Flags = EffectFlags.Configurable })
@@ -28,6 +30,7 @@ namespace PDNPresets
 			this.names = token.names;
 			this.effects = token.effects;
 			this.dialogs = token.dialogs;
+			this.collections = token.collections;
 
 			base.OnSetRenderInfo(parameters, dstArgs, srcArgs);
 		}
@@ -58,6 +61,7 @@ namespace PDNPresets
 				string name = this.names[i];
 				Effect effect = this.effects[i];
 				EffectConfigDialog dialog = this.dialogs[i];
+				PropertyCollection collection = this.collections[i];
 
 				effect.Render(dialog.EffectToken, new RenderArgs(dst), new RenderArgs(dst), new Rectangle[1] { rect }, 0, 1);
 			}
