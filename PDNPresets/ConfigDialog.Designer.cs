@@ -94,6 +94,7 @@
 			this.btnSave.TabIndex = 4;
 			this.btnSave.Text = "Save";
 			this.btnSave.UseVisualStyleBackColor = true;
+			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			// 
 			// btnLoad
 			// 
@@ -103,6 +104,7 @@
 			this.btnLoad.TabIndex = 5;
 			this.btnLoad.Text = "Load";
 			this.btnLoad.UseVisualStyleBackColor = true;
+			this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
 			// 
 			// buttonOK
 			// 
