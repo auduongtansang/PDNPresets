@@ -57,6 +57,8 @@ namespace PDNPresets
 
 					tmp.CopySurface(dstArgs.Surface);
 				}
+
+				dstArgs.Surface.CopySurface(tmp);
 			}
 		}
 	}
