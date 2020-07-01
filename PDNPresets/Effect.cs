@@ -9,10 +9,10 @@ namespace PDNPresets
 	[PluginSupportInfo(typeof(PluginSupportInfo))]
 	public class PDNPresetsPlugin : Effect
 	{
-		private List<int> types;
 		private List<Effect> effects;
 		private List<EffectConfigDialog> dialogs;
-		private List<PropertyCollection> collections;
+
+		private bool needReRender = false;
 
 		public PDNPresetsPlugin()
 			: base("PDNPresets", null, null, new EffectOptions { Flags = EffectFlags.Configurable })
@@ -27,43 +27,36 @@ namespace PDNPresets
 		protected override void OnSetRenderInfo(EffectConfigToken parameters, RenderArgs dstArgs, RenderArgs srcArgs)
 		{
 			PDNPresetsConfigToken token = (PDNPresetsConfigToken)parameters;
-			this.types = token.types;
 			this.effects = token.effects;
 			this.dialogs = token.dialogs;
-			this.collections = token.collections;
 
 			base.OnSetRenderInfo(parameters, dstArgs, srcArgs);
+
+			needReRender = true;
 		}
 
 		public override void Render(EffectConfigToken parameters, RenderArgs dstArgs, RenderArgs srcArgs, Rectangle[] rois, int startIndex, int length)
 		{
-			if (length == 0) return;
-			for (int i = startIndex; i < startIndex + length; ++i)
-			{
-				Render(dstArgs.Surface, srcArgs.Surface, rois[i]);
-			}
-		}
+			if (needReRender == false || length == 0) return;
 
-		private void Render(Surface dst, Surface src, Rectangle rect)
-		{
-			for (int y = rect.Top; y < rect.Bottom; y++)
+			needReRender = false;
+
+			PdnRegion selection = EnvironmentParameters.GetSelectionAsPdnRegion();
+
+			using (Surface tmp = new Surface(srcArgs.Size))
 			{
-				if (IsCancelRequested) return;
-				for (int x = rect.Left; x < rect.Right; x++)
+				tmp.CopySurface(srcArgs.Surface);
+
+				int count = this.effects.Count;
+				for (int i = 0; i < count; i++)
 				{
-					dst[x, y] = src[x, y];
+					Effect effect = this.effects[i];
+					EffectConfigToken token = this.dialogs[i].EffectToken;
+
+					effect.Render(token, dstArgs, new RenderArgs(tmp), selection);
+
+					tmp.CopySurface(dstArgs.Surface);
 				}
-			}
-
-			int count = this.types.Count;
-			for (int i = 0; i < count; i++)
-			{
-				int type = this.types[i];
-				Effect effect = this.effects[i];
-				EffectConfigDialog dialog = this.dialogs[i];
-				PropertyCollection collection = this.collections[i];
-
-				effect.Render(dialog.EffectToken, new RenderArgs(dst), new RenderArgs(dst), new Rectangle[1] { rect }, 0, 1);
 			}
 		}
 	}
