@@ -1,18 +1,28 @@
-﻿using PaintDotNet;
-using PaintDotNet.Effects;
+﻿using PaintDotNet.Effects;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using System;
 using PaintDotNet.PropertySystem;
 using System.IO;
-using System.Xml.Serialization;
-using System.Xml;
 
 namespace PDNPresets
 {
 	internal partial class PDNPresetsConfigDialog : EffectConfigDialog
 	{
-		private List<string> names;
+		private static List<Type> available = new List<Type>()
+		{
+			new AutoLevelEffect().GetType(),
+			new DesaturateEffect().GetType(),
+			new BrightnessAndContrastAdjustment().GetType(),
+			new CurvesEffect().GetType(),
+			new HueAndSaturationAdjustment().GetType(),
+			new InvertColorsEffect().GetType(),
+			new LevelsEffect().GetType(),
+			new PosterizeAdjustment().GetType(),
+			new SepiaEffect().GetType()
+		};
+
+		private List<int> types;
 		private List<Effect> effects;
 		private List<EffectConfigDialog> dialogs;
 		private List<PropertyCollection> collections;
@@ -20,7 +30,7 @@ namespace PDNPresets
 		public PDNPresetsConfigDialog()
 		{
 			InitializeComponent();
-			this.names = new List<string>();
+			this.types = new List<int>();
 			this.effects = new List<Effect>();
 			this.dialogs = new List<EffectConfigDialog>();
 			this.collections = new List<PropertyCollection>();
@@ -35,7 +45,7 @@ namespace PDNPresets
 		protected override void InitTokenFromDialog()
 		{
 			PDNPresetsConfigToken token = (PDNPresetsConfigToken)EffectToken;
-			token.names = new List<string>(this.names);
+			token.types = new List<int>(this.types);
 			token.effects = new List<Effect>(this.effects);
 			token.dialogs = new List<EffectConfigDialog>(this.dialogs);
 			token.collections = new List<PropertyCollection>(this.collections);
@@ -43,7 +53,7 @@ namespace PDNPresets
 
 		protected override void InitDialogFromToken(EffectConfigToken effectTokenCopy)
 		{
-			this.names = new List<string>();
+			this.types = new List<int>();
 			this.effects = new List<Effect>();
 			this.dialogs = new List<EffectConfigDialog>();
 			this.collections = new List<PropertyCollection>();
@@ -52,72 +62,32 @@ namespace PDNPresets
 
 		private void btnAdd_Click(object sender, EventArgs e)
 		{
-			string name = this.cbEffect.Text;
+			int type = this.cbEffect.SelectedIndex;
 			Effect effect = null;
 			EffectConfigDialog dialog = null;
 			PropertyCollection collection = null;
 
-			if (name == "Auto-Level")
+			effect = (Effect)available[type].GetConstructor(Type.EmptyTypes).Invoke(new object[0]);
+			dialog = effect.CreateConfigDialog();
+
+			if ((effect.Options.Flags & EffectFlags.Configurable) == 0)
 			{
-				effect = new AutoLevelEffect();
-				dialog = effect.CreateConfigDialog();
 				dialog.DialogResult = DialogResult.OK;
 			}
-			else if (name == "Black and White")
+			else
 			{
-				effect = new DesaturateEffect();
-				dialog = effect.CreateConfigDialog();
-				dialog.DialogResult = DialogResult.OK;
-			}
-			else if (name == "Brightness / Contrast")
-			{
-				effect = new BrightnessAndContrastAdjustment();
-				dialog = effect.CreateConfigDialog();
 				dialog.ShowDialog();
-			}
-			else if (name == "Curves")
-			{
-				effect = new CurvesEffect();
-				dialog = effect.CreateConfigDialog();
-				dialog.ShowDialog();
-			}
-			else if (name == "Hue / Saturation")
-			{
-				effect = new HueAndSaturationAdjustment();
-				dialog = effect.CreateConfigDialog();
-				dialog.ShowDialog();
-			}
-			else if (name == "Invert Colors")
-			{
-				effect = new InvertColorsEffect();
-				dialog = effect.CreateConfigDialog();
-				dialog.DialogResult = DialogResult.OK;
-			}
-			else if (name == "Levels")
-			{
-				effect = new LevelsEffect();
-				dialog = effect.CreateConfigDialog();
-				dialog.ShowDialog();
-			}
-			else if (name == "Posterize")
-			{
-				effect = new PosterizeAdjustment();
-				dialog = effect.CreateConfigDialog();
-				dialog.ShowDialog();
-			}
-			else if (name == "Sepia")
-			{
-				effect = new SepiaEffect();
-				dialog = effect.CreateConfigDialog();
-				dialog.DialogResult = DialogResult.OK;
 			}
 
 			if (dialog.DialogResult == DialogResult.OK)
 			{
-				collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
+				if (dialog.EffectToken is PropertyBasedEffectConfigToken)
+				{
+					collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
+				}
 
 				this.lbEffect.Items.Add(this.cbEffect.Text);
-				this.names.Add(name);
+				this.types.Add(type);
 				this.effects.Add(effect);
 				this.dialogs.Add(dialog);
 				this.collections.Add(collection);
@@ -132,7 +102,7 @@ namespace PDNPresets
 			if (index >= 0)
 			{
 				this.lbEffect.Items.RemoveAt(index);
-				this.names.RemoveAt(index);
+				this.types.RemoveAt(index);
 				this.effects.RemoveAt(index);
 				this.dialogs.RemoveAt(index);
 				this.collections.RemoveAt(index);
@@ -149,16 +119,19 @@ namespace PDNPresets
 			{
 				BinaryWriter writer = new BinaryWriter(File.Open(saveFileDialog.FileName, FileMode.Create));
 
-				int effectCount = this.names.Count;
+				int effectCount = this.types.Count;
 
 				writer.Write(effectCount);
 				for (int i = 0; i < effectCount; i++)
 				{
-					writer.Write(this.names[i]);
+					writer.Write(this.types[i]);
 
-					IEnumerator<Property> enumerator = this.collections[i].GetEnumerator();
-					while (enumerator.MoveNext())
-						writer.Write((int)enumerator.Current.Value);
+					if (this.dialogs[i].EffectToken is PropertyBasedEffectConfigToken)
+					{
+						IEnumerator<Property> enumerator = this.collections[i].GetEnumerator();
+						while (enumerator.MoveNext())
+							writer.Write((int)enumerator.Current.Value);
+					}
 				}
 
 				writer.Close();
@@ -175,12 +148,12 @@ namespace PDNPresets
 				BinaryReader reader = new BinaryReader(File.Open(openFileDialog.FileName, FileMode.Open));
 
 				this.lbEffect.Items.Clear();
-				this.names = new List<string>();
+				this.types = new List<int>();
 				this.effects = new List<Effect>();
 				this.dialogs = new List<EffectConfigDialog>();
 				this.collections = new List<PropertyCollection>();
 
-				string name = "";
+				int type = 0;
 				Effect effect = null;
 				EffectConfigDialog dialog = null;
 				PropertyCollection collection = null;
@@ -189,95 +162,29 @@ namespace PDNPresets
 				int effectCount = reader.ReadInt32();
 				for (int i = 0; i < effectCount; i++)
 				{
-					name = reader.ReadString();
+					type = reader.ReadInt32();
 
-					if (name == "Auto-Level")
+					effect = (Effect)available[type].GetConstructor(Type.EmptyTypes).Invoke(new object[0]);
+					dialog = effect.CreateConfigDialog();
+					
+					if (dialog.EffectToken is PropertyBasedEffectConfigToken)
 					{
-						effect = new AutoLevelEffect();
-						dialog = effect.CreateConfigDialog();
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
-					}
-					else if (name == "Black and White")
-					{
-						effect = new DesaturateEffect();
-						dialog = effect.CreateConfigDialog();
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
-					}
-					else if (name == "Brightness / Contrast")
-					{
-						effect = new BrightnessAndContrastAdjustment();
-						dialog = effect.CreateConfigDialog();
 						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
 						token = new PropertyBasedEffectConfigToken(collection);
 
-						foreach (BrightnessAndContrastAdjustment.PropertyNames j in Enum.GetValues(typeof(BrightnessAndContrastAdjustment.PropertyNames)))
+						IEnumerator<Property> enumerator = collection.GetEnumerator();
+						while (enumerator.MoveNext())
 						{
 							int propValue = reader.ReadInt32();
-							token.SetPropertyValue(j, propValue);
+							token.SetPropertyValue(enumerator.Current.Name, propValue);
 						}
-					}
-					else if (name == "Curves")
-					{
-						effect = new CurvesEffect();
-						dialog = effect.CreateConfigDialog();
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
-					}
-					else if (name == "Hue / Saturation")
-					{
-						effect = new HueAndSaturationAdjustment();
-						dialog = effect.CreateConfigDialog();
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
 
-						foreach (HueAndSaturationAdjustment.PropertyNames j in Enum.GetValues(typeof(HueAndSaturationAdjustment.PropertyNames)))
-						{
-							int propValue = reader.ReadInt32();
-							token.SetPropertyValue(j, propValue);
-						}
-					}
-					else if (name == "Invert Colors")
-					{
-						effect = new InvertColorsEffect();
-						dialog = effect.CreateConfigDialog();
+						dialog.EffectToken = token;
 						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
-					}
-					else if (name == "Levels")
-					{
-						effect = new LevelsEffect();
-						dialog = effect.CreateConfigDialog();
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
-					}
-					else if (name == "Posterize")
-					{
-						effect = new PosterizeAdjustment();
-						dialog = effect.CreateConfigDialog();
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
-
-						foreach (PosterizeAdjustment.PropertyNames j in Enum.GetValues(typeof(PosterizeAdjustment.PropertyNames)))
-						{
-							int propValue = reader.ReadInt32();
-							token.SetPropertyValue(j, propValue);
-						}
-					}
-					else if (name == "Sepia")
-					{
-						effect = new SepiaEffect();
-						dialog = effect.CreateConfigDialog();
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
 					}
 
-					dialog.EffectToken = token;
-					collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-
-					this.lbEffect.Items.Add(name);
-					this.names.Add(name);
+					this.lbEffect.Items.Add(this.cbEffect.Items[type]);
+					this.types.Add(type);
 					this.effects.Add(effect);
 					this.dialogs.Add(dialog);
 					this.collections.Add(collection);

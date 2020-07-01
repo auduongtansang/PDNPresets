@@ -9,7 +9,7 @@ namespace PDNPresets
 	[PluginSupportInfo(typeof(PluginSupportInfo))]
 	public class PDNPresetsPlugin : Effect
 	{
-		private List<string> names;
+		private List<int> types;
 		private List<Effect> effects;
 		private List<EffectConfigDialog> dialogs;
 		private List<PropertyCollection> collections;
@@ -27,7 +27,7 @@ namespace PDNPresets
 		protected override void OnSetRenderInfo(EffectConfigToken parameters, RenderArgs dstArgs, RenderArgs srcArgs)
 		{
 			PDNPresetsConfigToken token = (PDNPresetsConfigToken)parameters;
-			this.names = token.names;
+			this.types = token.types;
 			this.effects = token.effects;
 			this.dialogs = token.dialogs;
 			this.collections = token.collections;
@@ -55,10 +55,10 @@ namespace PDNPresets
 				}
 			}
 
-			int count = this.names.Count;
+			int count = this.types.Count;
 			for (int i = 0; i < count; i++)
 			{
-				string name = this.names[i];
+				int type = this.types[i];
 				Effect effect = this.effects[i];
 				EffectConfigDialog dialog = this.dialogs[i];
 				PropertyCollection collection = this.collections[i];
