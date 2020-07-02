@@ -103,31 +103,26 @@ namespace PDNPresets
 			PropertyCollection collection = null;
 
 			effect = (Effect)available[type].GetConstructor(Type.EmptyTypes).Invoke(new object[0]);
-			dialog = effect.CreateConfigDialog();
 
-			if ((effect.Options.Flags & EffectFlags.Configurable) == 0)
+			if ((effect.Options.Flags & EffectFlags.Configurable) != 0)
 			{
-				dialog.DialogResult = DialogResult.OK;
-			}
-			else
-			{
-				dialog.ShowDialog();
-			}
+				dialog = effect.CreateConfigDialog();
 
-			if (dialog.DialogResult == DialogResult.OK)
-			{
-				if (dialog.EffectToken is PropertyBasedEffectConfigToken)
+				if (dialog.ShowDialog() == DialogResult.OK)
 				{
-					collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
+					if (dialog.EffectToken is PropertyBasedEffectConfigToken)
+					{
+						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
+					}
 				}
-
-				this.lbEffect.Items.Add(this.cbEffect.Text);
-				this.types.Add(type);
-				this.effects.Add(effect);
-				this.dialogs.Add(dialog);
-				this.collections.Add(collection);
-				FinishTokenUpdate();
 			}
+
+			this.lbEffect.Items.Add(this.cbEffect.Text);
+			this.types.Add(type);
+			this.effects.Add(effect);
+			this.dialogs.Add(dialog);
+			this.collections.Add(collection);
+			FinishTokenUpdate();
 		}
 
 		private void btnRemove_Click(object sender, EventArgs e)

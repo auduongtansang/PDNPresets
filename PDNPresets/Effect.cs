@@ -51,9 +51,16 @@ namespace PDNPresets
 				for (int i = 0; i < count; i++)
 				{
 					Effect effect = this.effects[i];
-					EffectConfigToken token = this.dialogs[i].EffectToken;
+					EffectConfigDialog dialog = this.dialogs[i];
 
-					effect.Render(token, dstArgs, new RenderArgs(tmp), selection);
+					if (dialog == null)
+					{
+						effect.Render(null, dstArgs, new RenderArgs(tmp), selection);
+					}
+					else
+					{
+						effect.Render(dialog.EffectToken, dstArgs, new RenderArgs(tmp), selection);
+					}
 
 					tmp.CopySurface(dstArgs.Surface);
 				}
