@@ -53,7 +53,14 @@
             "Sepia",
 			"Ink Sketch",
 			"Oil Painting",
-			"Pencil Sketch",});
+			"Pencil Sketch",
+			"Fragment",
+			"Gaussian Blur",
+			"Motion Blur",
+			"Radial Blur",
+			"Surface Blur",
+			"Unfocus",
+			"Zoom Blur",});
 			this.cbEffect.Location = new System.Drawing.Point(12, 12);
 			this.cbEffect.Name = "cbEffect";
 			this.cbEffect.Size = new System.Drawing.Size(140, 23);

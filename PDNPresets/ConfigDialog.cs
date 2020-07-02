@@ -23,6 +23,13 @@ namespace PDNPresets
 			new InkSketchEffect().GetType(),
 			new OilPaintingEffect().GetType(),
 			new PencilSketchEffect().GetType(),
+			new FragmentEffect().GetType(),
+			new GaussianBlurEffect().GetType(),
+			new MotionBlurEffect().GetType(),
+			new RadialBlurEffect().GetType(),
+			new SurfaceBlurEffect().GetType(),
+			new UnfocusEffect().GetType(),
+			new ZoomBlurEffect().GetType(),
 		};
 
 		private List<int> types;
