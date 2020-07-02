@@ -245,6 +245,26 @@ namespace PDNPresets
 			}
 		}
 
+		private void btnModify_Click(object sender, EventArgs e)
+		{
+			int index = this.lbEffect.SelectedIndex;
+
+			if (index >= 0)
+			{
+				if ((this.effects[index].Options.Flags & EffectFlags.Configurable) != 0)
+				{
+					if (this.dialogs[index].ShowDialog() == DialogResult.OK)
+					{
+						if (this.dialogs[index].EffectToken is PropertyBasedEffectConfigToken)
+						{
+							this.collections[index] = ((PropertyBasedEffectConfigToken)this.dialogs[index].EffectToken).Properties;
+						}
+						FinishTokenUpdate();
+					}
+				}
+			}
+		}
+
 		private void btnUp_Click(object sender, EventArgs e)
 		{
 			int index = this.lbEffect.SelectedIndex;
