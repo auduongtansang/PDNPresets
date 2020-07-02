@@ -244,5 +244,103 @@ namespace PDNPresets
 				reader.Close();
 			}
 		}
+
+		private void btnModify_Click(object sender, EventArgs e)
+		{
+			int index = this.lbEffect.SelectedIndex;
+
+			if (index >= 0)
+			{
+				if ((this.effects[index].Options.Flags & EffectFlags.Configurable) != 0)
+				{
+					if (this.dialogs[index].ShowDialog() == DialogResult.OK)
+					{
+						if (this.dialogs[index].EffectToken is PropertyBasedEffectConfigToken)
+						{
+							this.collections[index] = ((PropertyBasedEffectConfigToken)this.dialogs[index].EffectToken).Properties;
+						}
+						FinishTokenUpdate();
+					}
+				}
+			}
+		}
+
+		private void btnUp_Click(object sender, EventArgs e)
+		{
+			int index = this.lbEffect.SelectedIndex;
+
+			if (index > 0)
+			{
+				object tmp = null;
+
+				--this.lbEffect.SelectedIndex;
+
+				tmp = this.lbEffect.Items[index];
+				this.lbEffect.Items[index] = this.lbEffect.Items[index - 1];
+				this.lbEffect.Items[index - 1] = (string)tmp;
+
+				tmp = this.types[index];
+				this.types[index] = this.types[index - 1];
+				this.types[index - 1] = (int)tmp;
+
+				tmp = this.effects[index];
+				this.effects[index] = this.effects[index - 1];
+				this.effects[index - 1] = (Effect)tmp;
+
+				tmp = this.dialogs[index];
+				this.dialogs[index] = this.dialogs[index - 1];
+				this.dialogs[index - 1] = (EffectConfigDialog)tmp;
+
+				tmp = this.collections[index];
+				this.collections[index] = this.collections[index - 1];
+				this.collections[index - 1] = (PropertyCollection)tmp;
+
+				FinishTokenUpdate();
+			}
+		}
+
+		private void btnDown_Click(object sender, EventArgs e)
+		{
+			int index = this.lbEffect.SelectedIndex;
+
+			if (index < this.lbEffect.Items.Count - 1)
+			{
+				object tmp = null;
+
+				++this.lbEffect.SelectedIndex;
+
+				tmp = this.lbEffect.Items[index];
+				this.lbEffect.Items[index] = this.lbEffect.Items[index + 1];
+				this.lbEffect.Items[index + 1] = (string)tmp;
+
+				tmp = this.types[index];
+				this.types[index] = this.types[index + 1];
+				this.types[index + 1] = (int)tmp;
+
+				tmp = this.effects[index];
+				this.effects[index] = this.effects[index + 1];
+				this.effects[index + 1] = (Effect)tmp;
+
+				tmp = this.dialogs[index];
+				this.dialogs[index] = this.dialogs[index + 1];
+				this.dialogs[index + 1] = (EffectConfigDialog)tmp;
+
+				tmp = this.collections[index];
+				this.collections[index] = this.collections[index + 1];
+				this.collections[index + 1] = (PropertyCollection)tmp;
+
+				FinishTokenUpdate();
+			}
+		}
+
+		private void btnClear_Click(object sender, EventArgs e)
+		{
+			this.lbEffect.Items.Clear();
+			this.types = new List<int>();
+			this.effects = new List<Effect>();
+			this.dialogs = new List<EffectConfigDialog>();
+			this.collections = new List<PropertyCollection>();
+			FinishTokenUpdate();
+		}
 	}
 }
