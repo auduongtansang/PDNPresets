@@ -82,6 +82,10 @@
 			"Julia Fractal",
 			"Mandelbrot Fractal",
 			//"Turbulence (*)",
+			"Edge Detect",
+			"Embose",
+			"Outline",
+			"Relief",
 			});
 			this.cbEffect.Location = new System.Drawing.Point(12, 12);
 			this.cbEffect.Name = "cbEffect";

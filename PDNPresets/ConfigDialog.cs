@@ -51,6 +51,10 @@ namespace PDNPresets
 			new JuliaFractalEffect().GetType(),
 			new MandelbrotFractalEffect().GetType(),
 			//new TurbulenceEffect().GetType(),  //Cannot create type
+			new EdgeDetectEffect().GetType(),
+			new EmbossEffect().GetType(),
+			new OutlineEffect().GetType(),
+			new ReliefEffect().GetType(),
 		};
 
 		private List<int> types;
