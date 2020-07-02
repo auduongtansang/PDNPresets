@@ -39,6 +39,9 @@ namespace PDNPresets
 			new PolarInversionEffect().GetType(),  //Error
 			new TileEffect().GetType(),
 			new TwistEffect().GetType(),  //Error
+			new AddNoiseEffect().GetType(),
+			new MedianEffect().GetType(),
+			new ReduceNoiseEffect().GetType(),
 		};
 
 		private List<int> types;
