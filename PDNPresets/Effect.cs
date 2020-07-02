@@ -47,20 +47,17 @@ namespace PDNPresets
 			{
 				tmp.CopySurface(srcArgs.Surface);
 
+				Effect effect = null;
+				EffectConfigToken token = null;
+
 				int count = this.effects.Count;
 				for (int i = 0; i < count; i++)
 				{
-					Effect effect = this.effects[i];
-					EffectConfigDialog dialog = this.dialogs[i];
+					effect = this.effects[i];
+					token = this.dialogs[i]?.EffectToken;
 
-					if (dialog == null)
-					{
-						effect.Render(null, dstArgs, new RenderArgs(tmp), selection);
-					}
-					else
-					{
-						effect.Render(dialog.EffectToken, dstArgs, new RenderArgs(tmp), selection);
-					}
+					effect.SetRenderInfo(token, dstArgs, new RenderArgs(tmp));
+					effect.Render(token, dstArgs, new RenderArgs(tmp), selection);
 
 					tmp.CopySurface(dstArgs.Surface);
 				}
