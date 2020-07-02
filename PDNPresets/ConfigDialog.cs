@@ -19,7 +19,10 @@ namespace PDNPresets
 			new InvertColorsEffect().GetType(),
 			new LevelsEffect().GetType(),
 			new PosterizeAdjustment().GetType(),
-			new SepiaEffect().GetType()
+			new SepiaEffect().GetType(),
+			new InkSketchEffect().GetType(),
+			new OilPaintingEffect().GetType(),
+			new PencilSketchEffect().GetType(),
 		};
 
 		private List<int> types;
@@ -130,7 +133,16 @@ namespace PDNPresets
 					{
 						IEnumerator<Property> enumerator = this.collections[i].GetEnumerator();
 						while (enumerator.MoveNext())
-							writer.Write((int)enumerator.Current.Value);
+						{
+							Property property = enumerator.Current;
+
+							if (property is Int32Property)
+								writer.Write((int)property.Value);
+							else if (property is DoubleProperty)
+								writer.Write((double)property.Value);
+							else if (property is BooleanProperty)
+								writer.Write((bool)property.Value);
+						}
 					}
 				}
 
@@ -175,8 +187,14 @@ namespace PDNPresets
 						IEnumerator<Property> enumerator = collection.GetEnumerator();
 						while (enumerator.MoveNext())
 						{
-							int propValue = reader.ReadInt32();
-							token.SetPropertyValue(enumerator.Current.Name, propValue);
+							Property property = enumerator.Current;
+
+							if (property is Int32Property)
+								token.SetPropertyValue(property.Name, reader.ReadInt32());
+							else if (property is DoubleProperty)
+								token.SetPropertyValue(property.Name, reader.ReadDouble());
+							else if (property is BooleanProperty)
+								token.SetPropertyValue(property.Name, reader.ReadBoolean());
 						}
 
 						dialog.EffectToken = token;
