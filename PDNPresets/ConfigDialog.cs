@@ -11,15 +11,50 @@ namespace PDNPresets
 	{
 		private static List<Type> available = new List<Type>()
 		{
-			new AutoLevelEffect().GetType(),
+			new AutoLevelEffect().GetType(),  //Not working
 			new DesaturateEffect().GetType(),
 			new BrightnessAndContrastAdjustment().GetType(),
-			new CurvesEffect().GetType(),
+			new CurvesEffect().GetType(),  //Cannot save
 			new HueAndSaturationAdjustment().GetType(),
 			new InvertColorsEffect().GetType(),
-			new LevelsEffect().GetType(),
+			new LevelsEffect().GetType(),  //Error
 			new PosterizeAdjustment().GetType(),
-			new SepiaEffect().GetType()
+			new SepiaEffect().GetType(),
+			new InkSketchEffect().GetType(),
+			new OilPaintingEffect().GetType(),
+			new PencilSketchEffect().GetType(),
+			new FragmentEffect().GetType(),
+			new GaussianBlurEffect().GetType(),
+			new MotionBlurEffect().GetType(),
+			new RadialBlurEffect().GetType(),  //Error
+			new SurfaceBlurEffect().GetType(),
+			new UnfocusEffect().GetType(),
+			new ZoomBlurEffect().GetType(),  //Error
+			new BulgeEffect().GetType(),  //Error
+			new CrystalizeEffect().GetType(),
+			new DentsEffect().GetType(),  //Not working
+			new FrostedGlassEffect().GetType(),
+			//new MorphologyEffect().GetType(),  //Cannot create type
+			new PixelateEffect().GetType(),
+			new PolarInversionEffect().GetType(),  //Error
+			new TileEffect().GetType(),
+			new TwistEffect().GetType(),  //Error
+			new AddNoiseEffect().GetType(),
+			new MedianEffect().GetType(),
+			new ReduceNoiseEffect().GetType(),
+			new GlowEffect().GetType(),
+			new RedEyeRemoveEffect().GetType(),
+			new SharpenEffect().GetType(),
+			new SoftenPortraitEffect().GetType(),
+			new VignetteEffect().GetType(),  //Error
+			new CloudsEffect().GetType(),
+			new JuliaFractalEffect().GetType(),
+			new MandelbrotFractalEffect().GetType(),
+			//new TurbulenceEffect().GetType(),  //Cannot create type
+			new EdgeDetectEffect().GetType(),
+			new EmbossEffect().GetType(),
+			new OutlineEffect().GetType(),
+			new ReliefEffect().GetType(),
 		};
 
 		private List<int> types;
@@ -130,7 +165,16 @@ namespace PDNPresets
 					{
 						IEnumerator<Property> enumerator = this.collections[i].GetEnumerator();
 						while (enumerator.MoveNext())
-							writer.Write((int)enumerator.Current.Value);
+						{
+							Property property = enumerator.Current;
+
+							if (property is Int32Property)
+								writer.Write((int)property.Value);
+							else if (property is DoubleProperty)
+								writer.Write((double)property.Value);
+							else if (property is BooleanProperty)
+								writer.Write((bool)property.Value);
+						}
 					}
 				}
 
@@ -175,8 +219,14 @@ namespace PDNPresets
 						IEnumerator<Property> enumerator = collection.GetEnumerator();
 						while (enumerator.MoveNext())
 						{
-							int propValue = reader.ReadInt32();
-							token.SetPropertyValue(enumerator.Current.Name, propValue);
+							Property property = enumerator.Current;
+
+							if (property is Int32Property)
+								token.SetPropertyValue(property.Name, reader.ReadInt32());
+							else if (property is DoubleProperty)
+								token.SetPropertyValue(property.Name, reader.ReadDouble());
+							else if (property is BooleanProperty)
+								token.SetPropertyValue(property.Name, reader.ReadBoolean());
 						}
 
 						dialog.EffectToken = token;
@@ -193,6 +243,104 @@ namespace PDNPresets
 				FinishTokenUpdate();
 				reader.Close();
 			}
+		}
+
+		private void btnModify_Click(object sender, EventArgs e)
+		{
+			int index = this.lbEffect.SelectedIndex;
+
+			if (index >= 0)
+			{
+				if ((this.effects[index].Options.Flags & EffectFlags.Configurable) != 0)
+				{
+					if (this.dialogs[index].ShowDialog() == DialogResult.OK)
+					{
+						if (this.dialogs[index].EffectToken is PropertyBasedEffectConfigToken)
+						{
+							this.collections[index] = ((PropertyBasedEffectConfigToken)this.dialogs[index].EffectToken).Properties;
+						}
+						FinishTokenUpdate();
+					}
+				}
+			}
+		}
+
+		private void btnUp_Click(object sender, EventArgs e)
+		{
+			int index = this.lbEffect.SelectedIndex;
+
+			if (index > 0)
+			{
+				object tmp = null;
+
+				--this.lbEffect.SelectedIndex;
+
+				tmp = this.lbEffect.Items[index];
+				this.lbEffect.Items[index] = this.lbEffect.Items[index - 1];
+				this.lbEffect.Items[index - 1] = (string)tmp;
+
+				tmp = this.types[index];
+				this.types[index] = this.types[index - 1];
+				this.types[index - 1] = (int)tmp;
+
+				tmp = this.effects[index];
+				this.effects[index] = this.effects[index - 1];
+				this.effects[index - 1] = (Effect)tmp;
+
+				tmp = this.dialogs[index];
+				this.dialogs[index] = this.dialogs[index - 1];
+				this.dialogs[index - 1] = (EffectConfigDialog)tmp;
+
+				tmp = this.collections[index];
+				this.collections[index] = this.collections[index - 1];
+				this.collections[index - 1] = (PropertyCollection)tmp;
+
+				FinishTokenUpdate();
+			}
+		}
+
+		private void btnDown_Click(object sender, EventArgs e)
+		{
+			int index = this.lbEffect.SelectedIndex;
+
+			if (index < this.lbEffect.Items.Count - 1)
+			{
+				object tmp = null;
+
+				++this.lbEffect.SelectedIndex;
+
+				tmp = this.lbEffect.Items[index];
+				this.lbEffect.Items[index] = this.lbEffect.Items[index + 1];
+				this.lbEffect.Items[index + 1] = (string)tmp;
+
+				tmp = this.types[index];
+				this.types[index] = this.types[index + 1];
+				this.types[index + 1] = (int)tmp;
+
+				tmp = this.effects[index];
+				this.effects[index] = this.effects[index + 1];
+				this.effects[index + 1] = (Effect)tmp;
+
+				tmp = this.dialogs[index];
+				this.dialogs[index] = this.dialogs[index + 1];
+				this.dialogs[index + 1] = (EffectConfigDialog)tmp;
+
+				tmp = this.collections[index];
+				this.collections[index] = this.collections[index + 1];
+				this.collections[index + 1] = (PropertyCollection)tmp;
+
+				FinishTokenUpdate();
+			}
+		}
+
+		private void btnClear_Click(object sender, EventArgs e)
+		{
+			this.lbEffect.Items.Clear();
+			this.types = new List<int>();
+			this.effects = new List<Effect>();
+			this.dialogs = new List<EffectConfigDialog>();
+			this.collections = new List<PropertyCollection>();
+			FinishTokenUpdate();
 		}
 	}
 }
