@@ -161,6 +161,7 @@
 			this.btnUp.TabIndex = 7;
 			this.btnUp.Text = "Up";
 			this.btnUp.UseVisualStyleBackColor = true;
+			this.btnUp.Click += new System.EventHandler(this.btnUp_Click);
 			// 
 			// btnDown
 			// 
@@ -170,6 +171,7 @@
 			this.btnDown.TabIndex = 8;
 			this.btnDown.Text = "Down";
 			this.btnDown.UseVisualStyleBackColor = true;
+			this.btnDown.Click += new System.EventHandler(this.btnDown_Click);
 			// 
 			// btnClear
 			// 
@@ -179,6 +181,7 @@
 			this.btnClear.TabIndex = 9;
 			this.btnClear.Text = "Clear";
 			this.btnClear.UseVisualStyleBackColor = true;
+			this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
 			// 
 			// buttonOK
 			// 
