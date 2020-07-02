@@ -47,6 +47,10 @@ namespace PDNPresets
 			new SharpenEffect().GetType(),
 			new SoftenPortraitEffect().GetType(),
 			new VignetteEffect().GetType(),  //Error
+			new CloudsEffect().GetType(),
+			new JuliaFractalEffect().GetType(),
+			new MandelbrotFractalEffect().GetType(),
+			//new TurbulenceEffect().GetType(),  //Cannot create type
 		};
 
 		private List<int> types;

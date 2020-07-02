@@ -77,7 +77,12 @@
 			"Red Eye Removal",
 			"Sharpen",
 			"Soften Portrait",
-			"Vignette (*)",});
+			"Vignette (*)",
+			"Clouds",
+			"Julia Fractal",
+			"Mandelbrot Fractal",
+			//"Turbulence (*)",
+			});
 			this.cbEffect.Location = new System.Drawing.Point(12, 12);
 			this.cbEffect.Name = "cbEffect";
 			this.cbEffect.Size = new System.Drawing.Size(140, 23);
