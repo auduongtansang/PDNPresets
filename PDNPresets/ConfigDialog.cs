@@ -11,13 +11,13 @@ namespace PDNPresets
 	{
 		private static List<Type> available = new List<Type>()
 		{
-			new AutoLevelEffect().GetType(),
+			new AutoLevelEffect().GetType(),  //Not working
 			new DesaturateEffect().GetType(),
 			new BrightnessAndContrastAdjustment().GetType(),
-			new CurvesEffect().GetType(),
+			new CurvesEffect().GetType(),  //Cannot save
 			new HueAndSaturationAdjustment().GetType(),
 			new InvertColorsEffect().GetType(),
-			new LevelsEffect().GetType(),
+			new LevelsEffect().GetType(),  //Error
 			new PosterizeAdjustment().GetType(),
 			new SepiaEffect().GetType(),
 			new InkSketchEffect().GetType(),
@@ -26,10 +26,19 @@ namespace PDNPresets
 			new FragmentEffect().GetType(),
 			new GaussianBlurEffect().GetType(),
 			new MotionBlurEffect().GetType(),
-			new RadialBlurEffect().GetType(),
+			new RadialBlurEffect().GetType(),  //Error
 			new SurfaceBlurEffect().GetType(),
 			new UnfocusEffect().GetType(),
-			new ZoomBlurEffect().GetType(),
+			new ZoomBlurEffect().GetType(),  //Error
+			new BulgeEffect().GetType(),  //Error
+			new CrystalizeEffect().GetType(),
+			new DentsEffect().GetType(),  //Not working
+			new FrostedGlassEffect().GetType(),
+			//new MorphologyEffect().GetType(),  //Cannot create type
+			new PixelateEffect().GetType(),
+			new PolarInversionEffect().GetType(),  //Error
+			new TileEffect().GetType(),
+			new TwistEffect().GetType(),  //Error
 		};
 
 		private List<int> types;

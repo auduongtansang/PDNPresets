@@ -42,13 +42,13 @@
 			// 
 			this.cbEffect.FormattingEnabled = true;
 			this.cbEffect.Items.AddRange(new object[] {
-            "Auto-Level",
+            "Auto-Level (*)",
             "Black and White",
             "Brightness / Contrast",
-            "Curves",
+            "Curves (*)",
             "Hue / Saturation",
             "Invert Colors",
-            "Levels",
+            "Levels (*)",
             "Posterize",
             "Sepia",
 			"Ink Sketch",
@@ -57,10 +57,19 @@
 			"Fragment",
 			"Gaussian Blur",
 			"Motion Blur",
-			"Radial Blur",
+			"Radial Blur  (*)",
 			"Surface Blur",
 			"Unfocus",
-			"Zoom Blur",});
+			"Zoom Blur (*)",
+			"Bulge (*)",
+			"Crystalize",
+			"Dents (*)",
+			"Frosted Glass",
+			//"Morphology (*)",
+			"Pixelate",
+			"Polar Inversion (*)",
+			"Tile Reflection",
+			"Twist (*)",});
 			this.cbEffect.Location = new System.Drawing.Point(12, 12);
 			this.cbEffect.Name = "cbEffect";
 			this.cbEffect.Size = new System.Drawing.Size(140, 23);
