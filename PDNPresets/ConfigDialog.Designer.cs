@@ -72,7 +72,12 @@
 			"Twist (*)",
 			"Add Noise",
 			"Median",
-			"Reduce Noise",});
+			"Reduce Noise",
+			"Glow",
+			"Red Eye Removal",
+			"Sharpen",
+			"Soften Portrait",
+			"Vignette (*)",});
 			this.cbEffect.Location = new System.Drawing.Point(12, 12);
 			this.cbEffect.Name = "cbEffect";
 			this.cbEffect.Size = new System.Drawing.Size(140, 23);

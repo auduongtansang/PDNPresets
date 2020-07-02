@@ -42,6 +42,11 @@ namespace PDNPresets
 			new AddNoiseEffect().GetType(),
 			new MedianEffect().GetType(),
 			new ReduceNoiseEffect().GetType(),
+			new GlowEffect().GetType(),
+			new RedEyeRemoveEffect().GetType(),
+			new SharpenEffect().GetType(),
+			new SoftenPortraitEffect().GetType(),
+			new VignetteEffect().GetType(),  //Error
 		};
 
 		private List<int> types;
