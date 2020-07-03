@@ -1,6 +1,5 @@
 ﻿using PaintDotNet;
 using PaintDotNet.Effects;
-using PaintDotNet.PropertySystem;
 using System.Collections.Generic;
 using System.Drawing;
 

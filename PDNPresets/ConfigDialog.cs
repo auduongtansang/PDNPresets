@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using System;
 using PaintDotNet.PropertySystem;
 using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace PDNPresets
 {
@@ -147,33 +148,27 @@ namespace PDNPresets
 
 			if (saveFileDialog.ShowDialog() == DialogResult.OK)
 			{
-				BinaryWriter writer = new BinaryWriter(File.Open(saveFileDialog.FileName, FileMode.Create));
+				FileStream stream = File.Open(saveFileDialog.FileName, FileMode.Create);
+				BinaryFormatter writer = new BinaryFormatter();
 
 				int effectCount = this.types.Count;
 
-				writer.Write(effectCount);
+				writer.Serialize(stream, effectCount);
 				for (int i = 0; i < effectCount; i++)
 				{
-					writer.Write(this.types[i]);
+					writer.Serialize(stream, this.types[i]);
 
-					if (this.dialogs[i].EffectToken is PropertyBasedEffectConfigToken)
+					if (this.dialogs[i]?.EffectToken is PropertyBasedEffectConfigToken)
 					{
 						IEnumerator<Property> enumerator = this.collections[i].GetEnumerator();
 						while (enumerator.MoveNext())
 						{
-							Property property = enumerator.Current;
-
-							if (property is Int32Property)
-								writer.Write((int)property.Value);
-							else if (property is DoubleProperty)
-								writer.Write((double)property.Value);
-							else if (property is BooleanProperty)
-								writer.Write((bool)property.Value);
+							writer.Serialize(stream, enumerator.Current.Value);
 						}
 					}
 				}
 
-				writer.Close();
+				stream.Close();
 			}
 		}
 
@@ -184,7 +179,8 @@ namespace PDNPresets
 
 			if (openFileDialog.ShowDialog() == DialogResult.OK)
 			{
-				BinaryReader reader = new BinaryReader(File.Open(openFileDialog.FileName, FileMode.Open));
+				FileStream stream = File.Open(openFileDialog.FileName, FileMode.Open);
+				BinaryFormatter reader = new BinaryFormatter();
 
 				this.lbEffect.Items.Clear();
 				this.types = new List<int>();
@@ -198,34 +194,31 @@ namespace PDNPresets
 				PropertyCollection collection = null;
 				PropertyBasedEffectConfigToken token = null;
 
-				int effectCount = reader.ReadInt32();
+				int effectCount = (int)reader.Deserialize(stream);
 				for (int i = 0; i < effectCount; i++)
 				{
-					type = reader.ReadInt32();
+					type = (int)reader.Deserialize(stream);
 
 					effect = (Effect)available[type].GetConstructor(Type.EmptyTypes).Invoke(new object[0]);
-					dialog = effect.CreateConfigDialog();
 					
-					if (dialog.EffectToken is PropertyBasedEffectConfigToken)
+					if ((effect.Options.Flags & EffectFlags.Configurable) != 0)
 					{
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
-						token = new PropertyBasedEffectConfigToken(collection);
+						dialog = effect.CreateConfigDialog();
 
-						IEnumerator<Property> enumerator = collection.GetEnumerator();
-						while (enumerator.MoveNext())
+						if (dialog.EffectToken is PropertyBasedEffectConfigToken)
 						{
-							Property property = enumerator.Current;
+							collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
+							token = new PropertyBasedEffectConfigToken(collection);
 
-							if (property is Int32Property)
-								token.SetPropertyValue(property.Name, reader.ReadInt32());
-							else if (property is DoubleProperty)
-								token.SetPropertyValue(property.Name, reader.ReadDouble());
-							else if (property is BooleanProperty)
-								token.SetPropertyValue(property.Name, reader.ReadBoolean());
+							IEnumerator<Property> enumerator = collection.GetEnumerator();
+							while (enumerator.MoveNext())
+							{
+								token.SetPropertyValue(enumerator.Current.Name, reader.Deserialize(stream));
+							}
+
+							dialog.EffectToken = token;
+							collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
 						}
-
-						dialog.EffectToken = token;
-						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
 					}
 
 					this.lbEffect.Items.Add(this.cbEffect.Items[type]);
@@ -236,7 +229,7 @@ namespace PDNPresets
 				}
 
 				FinishTokenUpdate();
-				reader.Close();
+				stream.Close();
 			}
 		}
 
