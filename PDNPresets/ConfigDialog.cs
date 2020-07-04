@@ -259,7 +259,7 @@ namespace PDNPresets
 
 			if (index > 0)
 			{
-				object tmp = null;
+				dynamic tmp = null;
 
 				--this.lbEffect.SelectedIndex;
 
@@ -293,7 +293,7 @@ namespace PDNPresets
 
 			if (index < this.lbEffect.Items.Count - 1)
 			{
-				object tmp = null;
+				dynamic tmp = null;
 
 				++this.lbEffect.SelectedIndex;
 
