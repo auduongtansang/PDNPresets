@@ -1,6 +1,5 @@
 ﻿using PaintDotNet;
 using PaintDotNet.Effects;
-using PaintDotNet.PropertySystem;
 using System.Collections.Generic;
 using System.Drawing;
 
@@ -47,12 +46,16 @@ namespace PDNPresets
 			{
 				tmp.CopySurface(srcArgs.Surface);
 
+				Effect effect = null;
+				EffectConfigToken token = null;
+
 				int count = this.effects.Count;
 				for (int i = 0; i < count; i++)
 				{
-					Effect effect = this.effects[i];
-					EffectConfigToken token = this.dialogs[i].EffectToken;
+					effect = this.effects[i];
+					token = this.dialogs[i]?.EffectToken;
 
+					effect.SetRenderInfo(token, dstArgs, new RenderArgs(tmp));
 					effect.Render(token, dstArgs, new RenderArgs(tmp), selection);
 
 					tmp.CopySurface(dstArgs.Surface);
