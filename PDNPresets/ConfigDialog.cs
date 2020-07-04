@@ -19,7 +19,7 @@ namespace PDNPresets
 			new CurvesEffect().GetType(),
 			new HueAndSaturationAdjustment().GetType(),
 			new InvertColorsEffect().GetType(),
-			new LevelsEffect().GetType(),  //Error
+			new LevelsEffect().GetType(),
 			new PosterizeAdjustment().GetType(),
 			new SepiaEffect().GetType(),
 			new InkSketchEffect().GetType(),
@@ -109,6 +109,7 @@ namespace PDNPresets
 			if ((effect.Options.Flags & EffectFlags.Configurable) != 0)
 			{
 				dialog = effect.CreateConfigDialog();
+				dialog.Effect = effect;
 
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
@@ -219,6 +220,7 @@ namespace PDNPresets
 					if ((effect.Options.Flags & EffectFlags.Configurable) != 0)
 					{
 						dialog = effect.CreateConfigDialog();
+						dialog.Effect = effect;
 
 						if (dialog.EffectToken is PropertyBasedEffectConfigToken)
 						{
