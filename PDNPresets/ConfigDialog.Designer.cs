@@ -49,7 +49,7 @@
 			"Auto-Level (*)",
 			"Black and White",
 			"Brightness / Contrast",
-			"Curves (*)",
+			"Curves",
 			"Hue / Saturation",
 			"Invert Colors",
 			"Levels (*)",
