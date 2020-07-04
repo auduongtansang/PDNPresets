@@ -5,6 +5,7 @@ using System;
 using PaintDotNet.PropertySystem;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Reflection;
 
 namespace PDNPresets
 {
@@ -15,7 +16,7 @@ namespace PDNPresets
 			new AutoLevelEffect().GetType(),  //Not working
 			new DesaturateEffect().GetType(),
 			new BrightnessAndContrastAdjustment().GetType(),
-			new CurvesEffect().GetType(),  //Cannot save
+			new CurvesEffect().GetType(),
 			new HueAndSaturationAdjustment().GetType(),
 			new InvertColorsEffect().GetType(),
 			new LevelsEffect().GetType(),  //Error
@@ -166,6 +167,20 @@ namespace PDNPresets
 							writer.Serialize(stream, enumerator.Current.Value);
 						}
 					}
+					else if (this.dialogs[i] != null)
+					{
+						Type tokenType = this.dialogs[i].EffectToken.GetType();
+						PropertyInfo[] info = tokenType.GetProperties();
+
+						for (int j = 0; j < info.Length; j++)
+						{
+							object property = info[j].GetValue(this.dialogs[i].EffectToken);
+							if (property.GetType().IsSerializable == true)
+							{
+								writer.Serialize(stream, property);
+							}
+						}
+					}
 				}
 
 				stream.Close();
@@ -218,6 +233,20 @@ namespace PDNPresets
 
 							dialog.EffectToken = token;
 							collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
+						}
+						else
+						{
+							Type tokenType = dialog.EffectToken.GetType();
+							PropertyInfo[] info = tokenType.GetProperties();
+
+							for (int j = 0; j < info.Length; j++)
+							{
+								if (info[j].GetValue(dialog.EffectToken).GetType().IsSerializable == true)
+								{
+									object property = reader.Deserialize(stream);
+									info[j].SetValue(dialog.EffectToken, property);
+								}
+							}
 						}
 					}
 
