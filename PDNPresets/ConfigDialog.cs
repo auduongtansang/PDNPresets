@@ -13,13 +13,11 @@ namespace PDNPresets
 	{
 		private static List<Type> available = new List<Type>()
 		{
-			new AutoLevelEffect().GetType(),  //Not working
 			new DesaturateEffect().GetType(),
 			new BrightnessAndContrastAdjustment().GetType(),
 			new CurvesEffect().GetType(),
 			new HueAndSaturationAdjustment().GetType(),
 			new InvertColorsEffect().GetType(),
-			new LevelsEffect().GetType(),  //Error
 			new PosterizeAdjustment().GetType(),
 			new SepiaEffect().GetType(),
 			new InkSketchEffect().GetType(),
@@ -28,19 +26,12 @@ namespace PDNPresets
 			new FragmentEffect().GetType(),
 			new GaussianBlurEffect().GetType(),
 			new MotionBlurEffect().GetType(),
-			new RadialBlurEffect().GetType(),  //Error
 			new SurfaceBlurEffect().GetType(),
 			new UnfocusEffect().GetType(),
-			new ZoomBlurEffect().GetType(),  //Error
-			new BulgeEffect().GetType(),  //Error
 			new CrystalizeEffect().GetType(),
-			new DentsEffect().GetType(),  //Not working
 			new FrostedGlassEffect().GetType(),
-			//new MorphologyEffect().GetType(),  //Cannot create type
 			new PixelateEffect().GetType(),
-			new PolarInversionEffect().GetType(),  //Error
 			new TileEffect().GetType(),
-			new TwistEffect().GetType(),  //Error
 			new AddNoiseEffect().GetType(),
 			new MedianEffect().GetType(),
 			new ReduceNoiseEffect().GetType(),
@@ -48,11 +39,9 @@ namespace PDNPresets
 			new RedEyeRemoveEffect().GetType(),
 			new SharpenEffect().GetType(),
 			new SoftenPortraitEffect().GetType(),
-			new VignetteEffect().GetType(),  //Error
 			new CloudsEffect().GetType(),
 			new JuliaFractalEffect().GetType(),
 			new MandelbrotFractalEffect().GetType(),
-			//new TurbulenceEffect().GetType(),  //Cannot create type
 			new EdgeDetectEffect().GetType(),
 			new EmbossEffect().GetType(),
 			new OutlineEffect().GetType(),
@@ -109,6 +98,7 @@ namespace PDNPresets
 			if ((effect.Options.Flags & EffectFlags.Configurable) != 0)
 			{
 				dialog = effect.CreateConfigDialog();
+				dialog.Effect = effect;
 
 				if (dialog.ShowDialog() == DialogResult.OK)
 				{
@@ -117,6 +107,10 @@ namespace PDNPresets
 						collection = ((PropertyBasedEffectConfigToken)dialog.EffectToken).Properties;
 					}
 				}
+				else
+				{
+					return;
+				}	
 			}
 
 			this.lbEffect.Items.Add(this.cbEffect.Text);
@@ -219,6 +213,7 @@ namespace PDNPresets
 					if ((effect.Options.Flags & EffectFlags.Configurable) != 0)
 					{
 						dialog = effect.CreateConfigDialog();
+						dialog.Effect = effect;
 
 						if (dialog.EffectToken is PropertyBasedEffectConfigToken)
 						{
